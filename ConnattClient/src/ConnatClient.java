@@ -41,15 +41,17 @@ public class ConnatClient {
         while ((currentReceived = in.readLine()) != null) {
             System.out.println(currentReceived);
 
+            if (currentReceived.toUpperCase().equals("/QUIT")) {
+                break;
+            }
+
             if (currentReceived.split(" ")[0].equals("/SERVERMESSAGE")) {
                 display.appendServerText(currentReceived.substring(15));
             } else {
                 display.appendText(currentReceived);
             }
 
-            if (currentReceived.toUpperCase().equals("/QUIT")) {
-                break;
-            }
+
         }
         System.out.println("Closing.");
         closeAll();
