@@ -130,13 +130,21 @@ public class ServerThread extends Thread {
                         case "/ONLINE":
                             clientCalledOnline();
                             break;
+                        case "/HELP":
+                            clientCalledHelp();
+                            break;
                         default:
                             log(clientUsername + " used unrecognized command " + currentLine + ".");
                             sendServerMessage("Unrecognized command.");
                     }
                 } else {
                     log(getClientUsername() + ": " + currentLine);
-                    sendToAll(getAnonymousUsername() + ": " + currentLine);
+
+                    String userMessage = getAnonymousUsername();
+                    for (int i = getAnonymousUsername().length(); i <= 10; i++) {
+                        userMessage += "-";
+                    }
+                    sendToAll(userMessage + "> " + currentLine);
                 }
 
             }
@@ -150,6 +158,11 @@ public class ServerThread extends Thread {
             sendMessage("/QUIT");
         }
 
+        private void clientCalledHelp() throws IOException {
+            log(getAnonymousUsername() + " called help.");
+            sendServerMessage("Existing commands include /username, /online, and /quit.");
+        }
+
         private void clientCalledUsername(String currentLine) throws IOException {
             if (clientUsername != null) {
                 sendToAll(getClientUsername() + " has quit.");
@@ -157,10 +170,16 @@ public class ServerThread extends Thread {
             if (currentLine.length() < 11) {
                 sendServerMessage("Please enter a valid username - \"/username [name]\".");
             } else {
-                this.clientUsername = currentLine.substring(10);
-                log("Client at " + client.getInetAddress() + " has set username to " + getClientUsername());
-                sendToAll(getClientUsername() + " has joined.");
-                sendServerMessage("You have set your username to \"" + getClientUsername() + "\".");
+                String userAtt = currentLine.substring(10);
+
+                if (userAtt.length() > 10) {
+                    sendServerMessage("Usernames must be less than 10 characters!");
+                } else {
+                    this.clientUsername = currentLine.substring(10);
+                    log("Client at " + client.getInetAddress() + " has set username to " + getClientUsername());
+                    sendToAll(getClientUsername() + " has joined.");
+                    sendServerMessage("You have set your username to \"" + getClientUsername() + "\".");
+                }
             }
         }
 

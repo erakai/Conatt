@@ -1,15 +1,14 @@
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ConnatDisplay extends JPanel {
+
+    public static int WIDTH = 400, HEIGHT = 525;
 
     public static JFrame frame;
     public static ConnatDisplay mainPanel;
@@ -24,8 +23,8 @@ public class ConnatDisplay extends JPanel {
 
     public ConnatDisplay(LayoutManager layout) {
         super(layout);
+        setPreferredSize(new Dimension(WIDTH, HEIGHT));
         sendQueue = new ArrayList<>();
-
     }
 
     private void addComponents() {
@@ -37,16 +36,18 @@ public class ConnatDisplay extends JPanel {
         chat.setWrapStyleWord(true);
         JScrollPane areaScrollPane = new JScrollPane(chat);
         chat.setEditable(false);
-        areaScrollPane.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
+        areaScrollPane.setBorder(BorderFactory.createStrokeBorder(new BasicStroke(3)));
+        areaScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         c.gridwidth = 2;
         add(areaScrollPane, c);
 
-        textBar = new JTextField(30);
+        textBar = new JTextField(20);
         c.insets = new Insets(2, 6, 2, 6);
         textBar.setPreferredSize(new Dimension(textBar.getWidth(), 30));
         c.gridy=1;
         c.gridwidth=1;
-        textBar.setFont(new Font(textBar.getFont().getName(), textBar.getFont().getStyle(), (int)(textBar.getFont().getSize()*0.6)));
+        textBar.setFont(new Font(textBar.getFont().getName(), textBar.getFont().getStyle(), (int)(textBar.getFont().getSize())));
+        textBar.addActionListener(e -> clickedSend());
         add(textBar, c);
 
         send = new JButton("Send");
@@ -56,12 +57,13 @@ public class ConnatDisplay extends JPanel {
 
         serverChat = new JTextArea(8, 32);
         c.insets = new Insets(10, 5, 5, 5);
+        serverChat.setText("Try /help!\n");
         serverChat.setLineWrap(false);
+        serverChat.setEditable(false);
         serverChat.setWrapStyleWord(true);
         serverChat.setForeground(new Color(240, 84, 109));
         serverChat.setFont(new Font(serverChat.getFont().getName(), serverChat.getFont().getStyle(), (int)(serverChat.getFont().getSize()*0.8)));
         JScrollPane asp = new JScrollPane(serverChat);
-        serverChat.setEditable(false);
         asp.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
         c.gridwidth = 2;
         c.gridx=0;
@@ -70,7 +72,9 @@ public class ConnatDisplay extends JPanel {
     }
 
     public void appendText(String text) {
-        chat.append(text + "\n");
+        if (chat.getText().length() != 0) chat.append("\n");
+        chat.append(text);
+        chat.setCaretPosition(chat.getText().length());
     }
 
     public void appendServerText(String text) { serverChat.append(text + "\n"); }

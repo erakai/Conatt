@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="ConattServer:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/ConattServer_jar</output-path>
+    <root id="archive" name="ConattServer.jar">
+      <element id="module-output" name="ConattServer" />
+    </root>
+  </artifact>
+</component>

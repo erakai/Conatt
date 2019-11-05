@@ -48,9 +48,9 @@ public class ConnatClient {
             if (currentReceived.split(" ")[0].equals("/SERVERMESSAGE")) {
                 display.appendServerText(currentReceived.substring(15));
             } else {
+
                 display.appendText(currentReceived);
             }
-
 
         }
         System.out.println("Closing.");
